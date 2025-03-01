@@ -1,5 +1,6 @@
 import json
 
+# Clase que representa un producto en el inventario
 class Producto:
     def __init__(self, id_producto, nombre, cantidad, precio):
         self.id_producto = id_producto
@@ -7,25 +8,31 @@ class Producto:
         self.cantidad = cantidad
         self.precio = precio
 
+    # Método para actualizar la cantidad de un producto
     def actualizar_cantidad(self, nueva_cantidad):
         self.cantidad = nueva_cantidad
 
+    # Método para actualizar el precio de un producto
     def actualizar_precio(self, nuevo_precio):
         self.precio = nuevo_precio
 
+    # Método para convertir el objeto en un diccionario
     def to_dict(self):
         return {"id": self.id_producto, "nombre": self.nombre, "cantidad": self.cantidad, "precio": self.precio}
 
+    # Método estático para crear un objeto Producto a partir de un diccionario
     @staticmethod
     def from_dict(data):
         return Producto(data["id"], data["nombre"], data["cantidad"], data["precio"])
 
+# Clase que gestiona el inventario de productos
 class Inventario:
     def __init__(self):
         self.productos = {}
-        self.archivo = "inventario.json"
+        self.archivo = "inventario.json"  # Nombre del archivo donde se almacenará el inventario
         self.cargar_desde_archivo()
 
+    # Método para agregar un producto al inventario
     def agregar_producto(self, producto):
         if producto.id_producto in self.productos:
             print("El producto ya existe en el inventario.")
@@ -33,6 +40,7 @@ class Inventario:
             self.productos[producto.id_producto] = producto
             self.guardar_en_archivo()
 
+    # Método para eliminar un producto del inventario por su ID
     def eliminar_producto(self, id_producto):
         if id_producto in self.productos:
             del self.productos[id_producto]
@@ -41,6 +49,7 @@ class Inventario:
         else:
             print("Producto no encontrado.")
 
+    # Método para actualizar la cantidad o precio de un producto existente
     def actualizar_producto(self, id_producto, cantidad=None, precio=None):
         if id_producto in self.productos:
             if cantidad is not None:
@@ -51,13 +60,16 @@ class Inventario:
         else:
             print("Producto no encontrado.")
 
+    # Método para buscar productos por nombre
     def buscar_producto(self, nombre):
         return [p.to_dict() for p in self.productos.values() if p.nombre.lower() == nombre.lower()]
 
+    # Método para mostrar todos los productos del inventario
     def mostrar_productos(self):
         for producto in self.productos.values():
             print(producto.to_dict())
 
+    # Método para guardar el inventario en un archivo JSON
     def guardar_en_archivo(self):
         try:
             with open(self.archivo, "w") as archivo:
@@ -65,6 +77,7 @@ class Inventario:
         except OSError as e:
             print(f"Error al guardar el archivo: {e}")
 
+    # Método para cargar los productos desde un archivo JSON
     def cargar_desde_archivo(self):
         try:
             with open(self.archivo, "r") as archivo:
@@ -73,7 +86,7 @@ class Inventario:
         except (FileNotFoundError, OSError):
             self.productos = {}
 
-# Interfaz de usuario
+# Interfaz de usuario para interactuar con el inventario
 if __name__ == "__main__":
     inventario = Inventario()
     while True:
